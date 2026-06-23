@@ -1,0 +1,93 @@
+<!doctype html>
+<!-- Dropsite Warm — public landing page -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dropsite — Share static sites in one drop</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+  <style>
+    :root{--bg:#FBF7F0; --ink:#2A2118; --coral:#EF6A43; --coral-soft:#FBE3D2;
+          --muted:#867866; --faint:#B7A48E; --border:#EAD0B4; --line:#F1EBE1;}
+    *{box-sizing:border-box;}
+    body{margin:0; background:var(--bg); color:var(--ink); font-family:'Hanken Grotesk',sans-serif;}
+    @keyframes bob{0%,100%{transform:translateY(0) rotate(7deg);}50%{transform:translateY(-7px) rotate(7deg);}}
+    header{display:flex; align-items:center; justify-content:space-between; padding:18px 30px;}
+    .brand{display:flex; align-items:center; gap:11px;}
+    .mark{width:30px; height:30px; border-radius:9px; background:var(--coral);
+          display:flex; align-items:center; justify-content:center;}
+    .brand span{font:800 19px/1 'Hanken Grotesk',sans-serif; letter-spacing:-.01em;}
+    .top-cta{font:700 13px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+             text-decoration:none; padding:10px 18px; border-radius:99px;}
+    main{max-width:760px; margin:0 auto; padding:36px 24px 28px; text-align:center;}
+    .illus{width:78px; height:70px; position:relative; margin:0 auto 22px;}
+    .illus .b{position:absolute; left:12px; top:10px; width:48px; height:58px; border-radius:10px;
+              background:var(--coral-soft); transform:rotate(-9deg);}
+    .illus .f{position:absolute; left:22px; top:3px; width:48px; height:58px; border-radius:10px;
+              background:#fff; border:1.5px solid #F1D9C2; display:flex; align-items:center;
+              justify-content:center; transform:rotate(7deg); animation:bob 2.6s ease-in-out infinite;}
+    h1{font:800 42px/1.05 'Hanken Grotesk',sans-serif; letter-spacing:-.025em; margin:0;}
+    p.lead{font:400 17px/1.5 'Hanken Grotesk',sans-serif; color:var(--muted);
+           margin:13px auto 0; max-width:500px;}
+    .cta{display:inline-flex; align-items:center; gap:9px; margin-top:24px; text-decoration:none;
+         font:700 15px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+         padding:15px 26px; border-radius:99px; box-shadow:0 14px 30px -12px rgba(239,106,67,.9);}
+    .feats{display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:44px;}
+    .feat{flex:1; min-width:200px; max-width:230px; background:#fff; border:1px solid var(--line);
+          border-radius:16px; padding:20px; text-align:left;
+          box-shadow:0 10px 30px -24px rgba(120,70,20,.7);}
+    .feat .ic{width:32px; height:32px; border-radius:9px; background:var(--coral-soft);
+              display:flex; align-items:center; justify-content:center; margin-bottom:11px;}
+    .feat h3{font:700 15px/1.2 'Hanken Grotesk',sans-serif; margin:0;}
+    .feat p{font:400 13.5px/1.5 'Hanken Grotesk',sans-serif; color:var(--muted); margin:6px 0 0;}
+    footer{text-align:center; padding:40px 24px 56px; color:var(--faint);
+           font:500 13px/1 'JetBrains Mono',monospace;}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="m5 12 7-7 7 7"/></svg></div>
+      <span>Dropsite</span>
+    </div>
+    <a class="top-cta" href="{{ '/admin' if signed_in else '/admin/login' }}">{{ 'Sites' if signed_in else 'Sign in' }}</a>
+  </header>
+
+  <main>
+    <div class="illus">
+      <div class="b"></div>
+      <div class="f"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17V7"/><path d="m7 12 5-5 5 5"/></svg></div>
+    </div>
+    <h1>Share it in one drop.</h1>
+    <p class="lead">Dropsite hosts your prebuilt static sites — HTML files, docs, zipped folders —
+       at a clean internal link. No build step, no setup, no waiting.</p>
+    <a class="cta" href="{{ '/admin' if signed_in else '/admin/login' }}">
+      {{ 'Go to your sites' if signed_in else 'Get started' }}
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+
+    <div class="feats">
+      <div class="feat">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17V7"/><path d="m7 12 5-5 5 5"/></svg></div>
+        <h3>Drag &amp; drop</h3>
+        <p>Drop a single HTML file or a zipped folder. It's live the moment you publish.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg></div>
+        <h3>Instant rollback</h3>
+        <p>Every publish is versioned. Roll back to any earlier version with one click.</p>
+      </div>
+      <div class="feat">
+        <div class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></div>
+        <h3>Clean links</h3>
+        <p>Get a tidy, shareable URL. Name it whatever you like, rename it anytime.</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>Dropsite · internal static site hosting</footer>
+</body>
+</html>

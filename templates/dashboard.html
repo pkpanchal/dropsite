@@ -1,0 +1,515 @@
+<!doctype html>
+<!-- Dropsite Warm — Coral theme (implements "Dropsite Warm.dc.html") -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dropsite</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#FBF7F0; --ink:#2A2118; --coral:#EF6A43; --coral-soft:#FBE3D2;
+      --muted:#867866; --muted-2:#A8997F; --faint:#B7A48E;
+      --border:#EAD0B4; --line:#F1EBE1; --soft-line:#EDE2D2;
+      --avatar-bg:#F1E3D2; --avatar-ink:#9A7B53; --green:#16A34A; --green-soft:#E8F6EE;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+         font-family:'Hanken Grotesk',sans-serif;}
+    @keyframes w-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(.82);}}
+    @keyframes w-bob{0%,100%{transform:translateY(0);}50%{transform:translateY(-6px);}}
+    @keyframes w-spin{to{transform:rotate(360deg);}}
+
+    /* header */
+    header{height:62px; display:flex; align-items:center; justify-content:space-between;
+           padding:0 30px; border-bottom:1px solid var(--line);}
+    .brand{display:flex; align-items:center; gap:11px; cursor:pointer;}
+    .mark{width:28px; height:28px; border-radius:9px; background:var(--coral);
+          display:flex; align-items:center; justify-content:center;}
+    .brand span{font:800 18px/1 'Hanken Grotesk',sans-serif; letter-spacing:-.01em;}
+    .hright{display:flex; align-items:center; gap:14px;}
+    .nav-link{font:600 13px/1 'Hanken Grotesk',sans-serif; color:var(--muted);
+              background:none; border:none; cursor:pointer; padding:8px;}
+    .nav-link:hover{color:var(--ink);}
+    .btn-new{font:700 13px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+             border:none; padding:10px 16px; border-radius:99px; cursor:pointer;}
+    .avatar{width:30px; height:30px; border-radius:50%; background:var(--avatar-bg);
+            color:var(--avatar-ink); font:600 12px/30px 'Hanken Grotesk',sans-serif;
+            text-align:center; text-transform:uppercase;}
+
+    main{display:flex; flex-direction:column; align-items:center; padding:48px 24px 80px;}
+    .view{display:none; width:100%;}
+    .view.active{display:block;}
+    .center{max-width:520px; margin:0 auto; text-align:center;}
+
+    h1.hero{font:800 38px/1.05 'Hanken Grotesk',sans-serif; letter-spacing:-.02em; margin:0;}
+    h1.mid{font:800 30px/1.1 'Hanken Grotesk',sans-serif; letter-spacing:-.02em; margin:0;}
+    p.lead{font:400 16px/1.55 'Hanken Grotesk',sans-serif; color:var(--muted); margin:12px 0 0;}
+
+    /* drop zone */
+    .drop{margin-top:28px; background:#fff; border:2px dashed var(--border); border-radius:24px;
+          padding:38px 32px; box-shadow:0 22px 48px -28px rgba(120,70,20,.45); cursor:pointer;
+          transition:.15s;}
+    .drop.over{border-color:var(--coral); background:#FFF6F0;}
+    .stack{width:64px; height:58px; position:relative; margin:0 auto 18px;}
+    .stack .b{position:absolute; left:8px; top:6px; width:40px; height:48px; border-radius:8px;
+              background:var(--coral-soft); transform:rotate(-9deg);}
+    .stack .f{position:absolute; left:16px; top:2px; width:40px; height:48px; border-radius:8px;
+              background:#fff; border:1.5px solid #F1D9C2; transform:rotate(7deg);
+              display:flex; align-items:flex-start; justify-content:center; padding-top:11px;}
+    .drop-title{font:600 17px/1.3 'Hanken Grotesk',sans-serif; color:#3A2E22;}
+    .browse{margin-top:16px; font:600 14px/1 'Hanken Grotesk',sans-serif; color:#fff;
+            background:var(--coral); border:none; padding:13px 24px; border-radius:99px; cursor:pointer;}
+    .hint{font:500 12px/1 'Hanken Grotesk',sans-serif; color:var(--faint); margin-top:16px;}
+
+    /* cards / review */
+    .card{background:#fff; border-radius:18px; box-shadow:0 14px 40px -26px rgba(120,70,20,.5); overflow:hidden;}
+    .file-head{display:flex; align-items:center; gap:11px; padding:14px 18px; border-bottom:1px solid var(--line);}
+    .file-ico{width:34px; height:34px; border-radius:9px; background:var(--coral-soft);
+              display:flex; align-items:center; justify-content:center; flex:none;}
+    .file-name{font:700 14px/1.2 'Hanken Grotesk',sans-serif;}
+    .file-meta{font:500 12px/1.3 'Hanken Grotesk',sans-serif; color:var(--muted-2);}
+    .file-row{display:flex; align-items:center; gap:10px; padding:9px 12px;}
+    .file-row .nm{flex:1; font:500 13px/1.3 'JetBrains Mono',monospace; color:#5C5446;
+                  overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+    .tag{font:600 10px/1 'JetBrains Mono',monospace; color:var(--coral); background:var(--coral-soft);
+         padding:4px 7px; border-radius:5px;}
+    .sz{font:400 12px/1 'JetBrains Mono',monospace; color:var(--faint); width:60px; text-align:right;}
+
+    .field-label{font:600 13px/1 'Hanken Grotesk',sans-serif; color:var(--muted); margin-bottom:8px;}
+    .link-box{display:flex; align-items:center; background:#fff; border:1.5px solid var(--border);
+              border-radius:12px; overflow:hidden;}
+    .link-box .host{font:500 14px/1 'JetBrains Mono',monospace; color:var(--faint);
+                    padding:0 2px 0 15px; white-space:nowrap;}
+    .link-box input{flex:1; border:none; outline:none; background:none; padding:15px 14px 15px 2px;
+                    font:600 14px/1 'JetBrains Mono',monospace; color:var(--coral); min-width:0;}
+
+    .btn-primary{font:700 15px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+                 border:none; padding:15px; border-radius:99px; cursor:pointer;
+                 box-shadow:0 12px 26px -12px rgba(239,106,67,.9);}
+    .btn-ghost{font:600 14px/1 'Hanken Grotesk',sans-serif; color:var(--muted); background:none;
+               border:none; cursor:pointer; padding:14px;}
+    .btn-soft{font:600 13px/1 'Hanken Grotesk',sans-serif; color:#5C5446; background:#fff;
+              border:1px solid var(--soft-line); padding:11px 18px; border-radius:99px; cursor:pointer;}
+
+    /* publishing */
+    .bar{margin-top:26px; height:9px; background:#F1E5D6; border-radius:99px; overflow:hidden;}
+    .bar > div{height:100%; width:8%; background:var(--coral); border-radius:99px; transition:width .4s ease;}
+    .steps{margin-top:22px; text-align:left; display:flex; flex-direction:column; gap:11px;}
+    .step{display:flex; align-items:center; gap:11px;}
+    .dot-done{width:20px; height:20px; border-radius:50%; background:var(--green-soft);
+              display:flex; align-items:center; justify-content:center; flex:none;}
+    .dot-wait{width:20px; height:20px; border:2px solid #F1D9C2; border-top-color:var(--coral);
+              border-radius:50%; flex:none; animation:w-spin .8s linear infinite;}
+    .step span.t{font:500 14px/1 'Hanken Grotesk',sans-serif;}
+
+    /* live */
+    .check{width:62px; height:62px; border-radius:50%; background:var(--green-soft);
+           display:flex; align-items:center; justify-content:center; margin:0 auto;}
+    .live-link{display:flex; align-items:center; gap:10px; margin:24px auto 0; background:#fff;
+               border:1.5px solid var(--border); border-radius:14px; padding:8px 8px 8px 16px;}
+    .live-dot{width:9px; height:9px; border-radius:50%; background:var(--green); flex:none;
+              animation:w-pulse 2s ease infinite;}
+    .live-url{flex:1; min-width:0; text-align:left; font:600 14px/1 'JetBrains Mono',monospace;
+              overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+    .copy{font:600 12px/1 'Hanken Grotesk',sans-serif; color:#5C5446; background:#FBF4EA;
+          border:1px solid var(--border); padding:9px 13px; border-radius:9px; cursor:pointer; flex:none;}
+    .open{font:600 12px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+          border:none; padding:9px 14px; border-radius:9px; cursor:pointer; flex:none;}
+
+    /* my sites */
+    .sites-wrap{max-width:780px; margin:0 auto;}
+    .sites-head{display:flex; align-items:baseline; justify-content:space-between; margin-bottom:20px;}
+    .sites-head h1{font:800 26px/1 'Hanken Grotesk',sans-serif; letter-spacing:-.02em; margin:0;}
+    .sites-count{font:500 13px/1 'Hanken Grotesk',sans-serif; color:var(--muted-2);}
+    .site-row{display:flex; align-items:center; gap:16px; background:#fff; border-radius:14px;
+              padding:14px 18px; box-shadow:0 8px 24px -20px rgba(120,70,20,.6); margin-bottom:12px;}
+    .site-sw{width:46px; height:46px; border-radius:10px; flex:none;}
+    .site-name{font:700 15px/1.2 'Hanken Grotesk',sans-serif;}
+    .site-url{font:500 13px/1.3 'JetBrains Mono',monospace; color:var(--muted-2);
+              overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+    .status{display:flex; align-items:center; gap:7px; flex:none;}
+    .status .s-dot{width:8px; height:8px; border-radius:50%;}
+    .status .s-txt{font:600 12px/1 'Hanken Grotesk',sans-serif;}
+    .site-when{font:500 12px/1 'Hanken Grotesk',sans-serif; color:var(--faint);
+               width:92px; text-align:right; flex:none;}
+    .row-btn{font:600 12px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+             border:none; padding:9px 15px; border-radius:99px; cursor:pointer; flex:none;
+             text-decoration:none; display:inline-flex; align-items:center; gap:5px;}
+    .menu-btn{font:700 18px/1 'Hanken Grotesk',sans-serif; color:#C9B79E; flex:none;
+              background:none; border:none; cursor:pointer; position:relative;}
+    .menu{position:absolute; right:0; top:24px; background:#fff; border:1px solid var(--soft-line);
+          border-radius:10px; box-shadow:0 12px 30px -12px rgba(80,50,20,.4); overflow:hidden; z-index:5;}
+    .menu button{display:block; width:140px; text-align:left; padding:10px 14px; background:none;
+                 border:none; cursor:pointer; font:600 13px/1 'Hanken Grotesk',sans-serif; color:#5C5446;}
+    .menu button:hover{background:#FBF4EA;}
+    .menu button.del{color:#B23B16;}
+    .empty{text-align:center; color:var(--muted-2); padding:40px;
+           font:500 14px/1.5 'Hanken Grotesk',sans-serif;}
+
+    /* version-history modal */
+    .overlay{position:fixed; inset:0; background:rgba(42,33,24,.45); display:none;
+             align-items:center; justify-content:center; z-index:20; padding:24px;}
+    .overlay.show{display:flex;}
+    .modal{background:#fff; border-radius:18px; width:480px; max-width:100%; max-height:82vh;
+           display:flex; flex-direction:column; overflow:hidden;
+           box-shadow:0 30px 70px -30px rgba(80,50,20,.6);}
+    .modal-head{display:flex; align-items:center; justify-content:space-between;
+                padding:18px 22px; border-bottom:1px solid var(--line);}
+    .modal-head h3{font:800 18px/1 'Hanken Grotesk',sans-serif; margin:0;}
+    .modal-head button{background:none; border:none; font-size:18px; color:var(--muted-2); cursor:pointer;}
+    .modal-body{padding:8px; overflow:auto;}
+    .dep{display:flex; align-items:center; gap:12px; padding:12px 14px; border-radius:10px;}
+    .dep:hover{background:#FBF4EA;}
+    .dep .meta{flex:1; min-width:0;}
+    .dep .v{font:700 13px/1.2 'JetBrains Mono',monospace; color:var(--ink);}
+    .dep .dsub{font:500 12px/1.3 'Hanken Grotesk',sans-serif; color:var(--muted-2); margin-top:3px;}
+    .dep .cur{font:600 11px/1 'Hanken Grotesk',sans-serif; color:#16A34A; background:#E8F6EE;
+              padding:7px 12px; border-radius:99px; flex:none;}
+    .dep .rb{font:600 12px/1 'Hanken Grotesk',sans-serif; color:#fff; background:var(--coral);
+             border:none; padding:8px 15px; border-radius:99px; cursor:pointer; flex:none;}
+
+    .toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%) translateY(20px);
+           background:var(--ink); color:#fff; padding:12px 18px; border-radius:99px;
+           font:600 13px/1 'Hanken Grotesk',sans-serif; opacity:0; transition:.22s; pointer-events:none;}
+    .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand" onclick="show('sites')">
+      <div class="mark"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="m5 12 7-7 7 7"/></svg></div>
+      <span>Dropsite</span>
+    </div>
+    <div class="hright">
+      <button class="nav-link" onclick="show('sites')">Your sites</button>
+      <button class="btn-new" onclick="goHome()">+ New site</button>
+      <div class="avatar" title="{{ user.username }}{% if user.is_superadmin %} · superadmin{% endif %}">{{ user.username[:2] }}</div>
+      <form id="logout" method="post" action="/admin/logout" style="display:none"></form>
+      <button class="nav-link" onclick="document.getElementById('logout').submit()">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== UPLOAD ===== -->
+    <div class="view" id="view-home">
+      <div class="center">
+        <h1 class="hero">Share it in one drop.</h1>
+        <p class="lead">Drag in an HTML file or a zipped folder. Get a clean link to share — no build, no setup.</p>
+        <div class="drop" id="drop">
+          <div class="stack">
+            <div class="b"></div>
+            <div class="f"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17V7"/><path d="m7 12 5-5 5 5"/></svg></div>
+          </div>
+          <div class="drop-title">Drag a file or folder here</div>
+          <button class="browse" type="button">Browse files</button>
+          <div class="hint">HTML files or zipped folders — up to {{ max_mb }} MB</div>
+          <input type="file" id="file" hidden accept=".html,.htm,.zip,.tar,.tgz,.tar.gz">
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== REVIEW ===== -->
+    <div class="view" id="view-review">
+      <div class="center" style="text-align:left;">
+        <div style="text-align:center;">
+          <h1 class="mid">Looks good?</h1>
+          <p class="lead">Review your file, name your link, and publish.</p>
+        </div>
+        <div class="card" style="margin-top:24px;">
+          <div class="file-head">
+            <div class="file-ico"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.93a2 2 0 0 1-1.66-.9l-.82-1.2A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13c0 1.1.9 2 2 2Z"/></svg></div>
+            <div style="flex:1; min-width:0;">
+              <div class="file-name" id="rv-name">file</div>
+              <div class="file-meta" id="rv-meta">—</div>
+            </div>
+          </div>
+          <div style="padding:6px 8px;" id="rv-rows"></div>
+        </div>
+
+        <div style="margin-top:18px;">
+          <div class="field-label">Your link</div>
+          <div class="link-box">
+            <span class="host" id="rv-host">/s/</span>
+            <input id="rv-slug" spellcheck="false" autocapitalize="off" autocomplete="off">
+          </div>
+        </div>
+
+        <div id="rv-error" style="display:none; margin-top:14px; background:#FBE3D2; border-radius:12px;
+             padding:13px 15px; font:500 13.5px/1.45 'Hanken Grotesk',sans-serif; color:#B23B16;">
+          <span id="rv-error-msg"></span>
+          <div style="margin-top:10px; display:flex; gap:10px;">
+            <button onclick="document.getElementById('rv-slug').focus()" style="font:600 12px/1 'Hanken Grotesk',sans-serif; color:#B23B16; background:#fff; border:1px solid #E9B8A6; padding:8px 13px; border-radius:8px; cursor:pointer;">Pick another name</button>
+            <button onclick="publishWith(true)" style="font:600 12px/1 'Hanken Grotesk',sans-serif; color:#fff; background:#B23B16; border:none; padding:8px 13px; border-radius:8px; cursor:pointer;">Update the existing site</button>
+          </div>
+        </div>
+
+        <div style="margin-top:22px; display:flex; gap:12px; align-items:center;">
+          <button class="btn-primary" style="flex:1;" onclick="publish()">Publish site</button>
+          <button class="btn-ghost" onclick="goHome()">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== PUBLISHING ===== -->
+    <div class="view" id="view-publishing">
+      <div class="center">
+        <div style="width:72px; height:64px; position:relative; margin:0 auto 24px; animation:w-bob 1.8s ease-in-out infinite;">
+          <div style="position:absolute; left:10px; top:8px; width:44px; height:52px; border-radius:9px; background:var(--coral-soft); transform:rotate(-9deg);"></div>
+          <div style="position:absolute; left:20px; top:2px; width:44px; height:52px; border-radius:9px; background:#fff; border:1.5px solid #F1D9C2; transform:rotate(7deg); display:flex; align-items:center; justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#EF6A43" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 17V7"/><path d="m7 12 5-5 5 5"/></svg></div>
+        </div>
+        <h1 class="mid">Publishing your site…</h1>
+        <p class="lead">This usually takes a few seconds. Hang tight.</p>
+        <div class="bar"><div id="pb-bar"></div></div>
+        <div class="steps">
+          <div class="step"><span class="dot-done"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t">Files uploaded</span></div>
+          <div class="step"><span class="dot-wait"></span><span class="t" style="color:var(--muted-2);">Building your link…</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== LIVE ===== -->
+    <div class="view" id="view-live">
+      <div class="center">
+        <div class="check"><svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#16A34A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+        <h1 class="mid" style="margin-top:18px;">You're live!</h1>
+        <p class="lead">Your site is published and ready to share.</p>
+        <div class="live-link">
+          <span class="live-dot"></span>
+          <span class="live-url" id="lv-url">/s/</span>
+          <button class="copy" onclick="copyLink()">Copy</button>
+          <button class="open" onclick="openLink()">Open</button>
+        </div>
+        <div style="margin-top:22px;">
+          <button class="btn-soft" onclick="show('sites')">View all sites</button>
+        </div>
+        <button style="margin-top:18px; font:700 14px/1 'Hanken Grotesk',sans-serif; color:var(--coral); background:none; border:none; cursor:pointer;" onclick="goHome()">Publish another →</button>
+      </div>
+    </div>
+
+    <!-- ===== MY SITES ===== -->
+    <div class="view" id="view-sites">
+      <div class="sites-wrap">
+        <div class="sites-head">
+          <h1>Your sites</h1>
+          <span class="sites-count" id="sites-count"></span>
+        </div>
+        <div id="sites-list"><div class="empty">Loading…</div></div>
+      </div>
+    </div>
+  </main>
+
+  <div class="overlay" id="hist-overlay" onclick="if(event.target===this) closeHistory()">
+    <div class="modal">
+      <div class="modal-head">
+        <h3 id="hist-title">Version history</h3>
+        <button onclick="closeHistory()" title="Close">✕</button>
+      </div>
+      <div class="modal-body" id="hist-body"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const ORIGIN = window.location.origin;
+    const SWATCHES = ['#FBE3D2','#E8E2F6','#DCEBDF','#F1E3D2','#E0E3FB'];
+    let pending = null;     // {file, slug}
+    let liveUrl = null;
+
+    const toast = (m) => { const t=document.getElementById('toast');
+      t.textContent=m; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),2600); };
+
+    function show(view){
+      document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+      document.getElementById('view-'+view).classList.add('active');
+      if(view==='sites') loadSites();
+    }
+    function goHome(){ pending=null; document.getElementById('file').value=''; show('home'); }
+
+    const fmtSize = (b)=> b<1024?b+' B':b<1048576?(b/1024).toFixed(0)+' KB':(b/1048576).toFixed(1)+' MB';
+    const slugify = (name)=> name.replace(/\.[^.]+$/,'').toLowerCase().replace(/[^a-z0-9]+/g,'-')
+                                 .replace(/^-+|-+$/g,'').slice(0,40) || 'site';
+    const pretty = (slug)=> slug.replace(/-/g,' ').replace(/\b\w/g, c=>c.toUpperCase());
+    function timeAgo(iso){ if(!iso) return '';
+      const s=(Date.now()-new Date(iso).getTime())/1000;
+      if(s<60) return 'just now'; if(s<3600) return Math.floor(s/60)+'m ago';
+      if(s<86400) return Math.floor(s/3600)+'h ago';
+      const d=Math.floor(s/86400); return d===1?'yesterday':d<7?d+' days ago':Math.floor(d/7)+'w ago'; }
+
+    // ---- pick a file -> review ----
+    function pick(file){
+      if(!file) return;
+      pending = { file, slug: slugify(file.name) };
+      document.getElementById('rv-name').textContent = pending.slug;
+      const isHtml = /\.html?$/i.test(file.name);
+      document.getElementById('rv-meta').textContent =
+        (isHtml ? '1 file' : 'archive') + ' · ' + fmtSize(file.size);
+      const rows = document.getElementById('rv-rows');
+      rows.innerHTML = `<div class="file-row"><span class="nm">${file.name}</span>`
+        + (isHtml ? `<span class="tag">ENTRY</span>` : '')
+        + `<span class="sz">${fmtSize(file.size)}</span></div>`;
+      document.getElementById('rv-host').textContent = '/s/';
+      document.getElementById('rv-slug').value = pending.slug;
+      hideError();
+      show('review');
+    }
+
+    // ---- publish ----
+    function hideError(){ document.getElementById('rv-error').style.display='none'; }
+    function showExistsError(slug){
+      document.getElementById('rv-error-msg').textContent =
+        '“' + slug + '” is already taken. Pick another name, or update the existing site.';
+      document.getElementById('rv-error').style.display='block';
+    }
+
+    async function publish(){ return publishWith(false); }
+
+    async function publishWith(overwrite){
+      const slug = document.getElementById('rv-slug').value.trim().toLowerCase();
+      if(!slug){ toast('Name your link first'); return; }
+      hideError();
+      show('publishing');
+      const bar = document.getElementById('pb-bar');
+      requestAnimationFrame(()=> bar.style.width='72%');
+      const fd = new FormData();
+      fd.append('file', pending.file);
+      fd.append('slug', slug);
+      fd.append('overwrite', overwrite ? 'true' : 'false');
+      let r;
+      try { r = await fetch('/api/deploy', { method:'POST', body: fd }); }
+      catch(e){ toast('Network error'); show('review'); return; }
+      if(r.ok){
+        const j = await r.json();
+        bar.style.width='100%';
+        liveUrl = ORIGIN + j.url;
+        document.getElementById('lv-url').textContent = j.url;
+        setTimeout(()=>show('live'), 320);
+      } else if(r.status === 409){
+        show('review');
+        showExistsError(slug);
+      } else {
+        const e = await r.json().catch(()=>({}));
+        toast('Could not publish: ' + (e.detail || r.status));
+        show('review');
+      }
+    }
+
+    function copyLink(){ navigator.clipboard.writeText(liveUrl).then(()=>toast('Link copied')); }
+    function openLink(){ window.open(liveUrl, '_blank'); }
+
+    // ---- my sites ----
+    async function loadSites(){
+      const list = document.getElementById('sites-list');
+      let sites;
+      try { const r = await fetch('/api/sites'); sites = await r.json(); }
+      catch(e){ list.innerHTML='<div class="empty">Failed to load.</div>'; return; }
+      document.getElementById('sites-count').textContent =
+        sites.length ? sites.length + (sites.length===1?' published':' published') : '';
+      if(!sites.length){
+        list.innerHTML = '<div class="empty">No sites yet. Hit “+ New site” to publish your first one.</div>';
+        return;
+      }
+      list.innerHTML = sites.map((s,i)=>{
+        const live = s.is_live;
+        return `<div class="site-row">
+          <div class="site-sw" style="background:${SWATCHES[i % SWATCHES.length]}"></div>
+          <div style="flex:1; min-width:0;">
+            <div class="site-name">${pretty(s.slug)}</div>
+            <div class="site-url">${ORIGIN}${s.url}</div>
+          </div>
+          <div class="status"><span class="s-dot" style="background:${live?'#16A34A':'#C9B79E'}"></span>
+            <span class="s-txt" style="color:${live?'#16A34A':'#A8997F'}">${live?'Live':'Draft'}</span></div>
+          <span class="site-when">${timeAgo(s.created_at)}</span>
+          <a class="row-btn" href="${s.url}" target="_blank">Open
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17 17 7"/><path d="M7 7h10v10"/></svg></a>
+          <button class="menu-btn" onclick="toggleMenu(event, '${s.slug}')">⋯</button>
+        </div>`;
+      }).join('');
+    }
+
+    function toggleMenu(ev, slug){
+      ev.stopPropagation();
+      document.querySelectorAll('.menu').forEach(m=>m.remove());
+      const m = document.createElement('div'); m.className='menu';
+      m.innerHTML = `<button onclick="window.open(ORIGIN+'/s/${slug}/','_blank')">Open</button>`
+                  + `<button onclick="openHistory('${slug}')">Version history</button>`
+                  + `<button onclick="renameSite('${slug}')">Rename link</button>`
+                  + `<button class="del" onclick="delSite('${slug}')">Delete</button>`;
+      ev.currentTarget.appendChild(m);
+    }
+    document.addEventListener('click', ()=>document.querySelectorAll('.menu').forEach(m=>m.remove()));
+
+    async function renameSite(slug){
+      const next = prompt('New link for "'+slug+'":\nlowercase letters, digits and hyphens.', slug);
+      if(next === null) return;
+      const clean = next.trim().toLowerCase();
+      if(!clean || clean === slug) return;
+      const fd = new FormData(); fd.append('new_slug', clean);
+      const r = await fetch('/api/sites/'+slug+'/rename', { method:'POST', body: fd });
+      if(r.ok){ toast('Renamed → /s/'+clean+'/'); loadSites(); }
+      else { const e = await r.json().catch(()=>({})); toast('Rename failed: ' + (e.detail || r.status)); }
+    }
+
+    async function delSite(slug){
+      if(!confirm('Delete "'+slug+'" and all its files?')) return;
+      const r = await fetch('/api/sites/'+slug, { method:'DELETE' });
+      toast(r.ok ? 'Deleted '+slug : 'Delete failed'); loadSites();
+    }
+
+    // ---- version history + rollback ----
+    let histSlug = null;
+    async function openHistory(slug){
+      histSlug = slug;
+      document.getElementById('hist-title').textContent = 'Versions · ' + slug;
+      document.getElementById('hist-body').innerHTML = '<div class="empty">Loading…</div>';
+      document.getElementById('hist-overlay').classList.add('show');
+      await renderHistory();
+    }
+    function closeHistory(){
+      document.getElementById('hist-overlay').classList.remove('show'); histSlug = null;
+    }
+    async function renderHistory(){
+      const body = document.getElementById('hist-body');
+      let s;
+      try { const r = await fetch('/api/sites/' + histSlug); s = await r.json(); if(!r.ok) throw 0; }
+      catch(e){ body.innerHTML = '<div class="empty">Failed to load.</div>'; return; }
+      const n = s.deployments.length;
+      body.innerHTML = s.deployments.map((d, i) => `
+        <div class="dep">
+          <div class="meta">
+            <div class="v">v${n - i} · ${d.id.slice(0,8)}</div>
+            <div class="dsub">${d.file_count} file(s) · ${fmtSize(d.size_bytes)} · ${timeAgo(d.created_at)}${d.created_by ? ' · ' + d.created_by : ''}</div>
+          </div>
+          ${d.is_current
+            ? '<span class="cur">Current</span>'
+            : `<button class="rb" onclick="rollbackTo('${d.id}')">Roll back</button>`}
+        </div>`).join('');
+    }
+    async function rollbackTo(depId){
+      const fd = new FormData(); fd.append('deployment_id', depId);
+      const r = await fetch('/api/sites/' + histSlug + '/rollback', { method:'POST', body: fd });
+      if(r.ok){ toast('Rolled back'); await renderHistory(); loadSites(); }
+      else { const e = await r.json().catch(()=>({})); toast('Rollback failed: ' + (e.detail || r.status)); }
+    }
+
+    // ---- drop zone wiring ----
+    const drop=document.getElementById('drop'), input=document.getElementById('file');
+    drop.onclick=()=>input.click();
+    input.onchange=()=>pick(input.files[0]);
+    drop.ondragover=(e)=>{e.preventDefault(); drop.classList.add('over');};
+    drop.ondragleave=()=>drop.classList.remove('over');
+    drop.ondrop=(e)=>{e.preventDefault(); drop.classList.remove('over'); pick(e.dataTransfer.files[0]);};
+
+    // ---- initial view ----
+    (async ()=>{
+      try { const r=await fetch('/api/sites'); const s=await r.json();
+        show(s.length ? 'sites' : 'home'); }
+      catch(e){ show('home'); }
+    })();
+  </script>
+</body>
+</html>

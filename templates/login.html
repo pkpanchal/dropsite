@@ -1,0 +1,59 @@
+<!doctype html>
+<!-- Dropsite Warm — Coral theme (from "Dropsite Warm.dc.html") -->
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Dropsite — Sign in</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#FBF7F0; --ink:#2A2118; --coral:#EF6A43; --coral-soft:#FBE3D2;
+      --muted:#867866; --muted-2:#A8997F; --faint:#B7A48E;
+      --border:#EAD0B4; --line:#F1EBE1; --avatar-bg:#F1E3D2; --avatar-ink:#9A7B53;
+    }
+    *{box-sizing:border-box;}
+    body{margin:0; min-height:100vh; background:var(--bg); color:var(--ink);
+         font-family:'Hanken Grotesk',sans-serif;
+         display:flex; align-items:center; justify-content:center; padding:24px;}
+    .brand{display:flex; align-items:center; gap:11px; justify-content:center; margin-bottom:26px;}
+    .mark{width:32px; height:32px; border-radius:10px; background:var(--coral);
+          display:flex; align-items:center; justify-content:center;}
+    .brand span{font:800 21px/1 'Hanken Grotesk',sans-serif; letter-spacing:-.01em;}
+    .card{width:380px; max-width:100%; background:#fff; border-radius:22px; padding:34px 32px;
+          box-shadow:0 26px 56px -34px rgba(120,70,20,.5);}
+    h1{font:800 26px/1.1 'Hanken Grotesk',sans-serif; letter-spacing:-.02em; margin:0; text-align:center;}
+    p.sub{font:400 15px/1.5 'Hanken Grotesk',sans-serif; color:var(--muted);
+          margin:8px 0 22px; text-align:center;}
+    label{display:block; font:600 13px/1 'Hanken Grotesk',sans-serif; color:var(--muted); margin:16px 0 8px;}
+    input{width:100%; padding:13px 15px; border:1.5px solid var(--border); border-radius:12px;
+          font:500 15px/1 'Hanken Grotesk',sans-serif; background:#fff; color:var(--ink);}
+    input:focus{outline:none; border-color:var(--coral);}
+    button{margin-top:24px; width:100%; padding:15px; border:none; border-radius:99px;
+           background:var(--coral); color:#fff; cursor:pointer;
+           font:700 15px/1 'Hanken Grotesk',sans-serif;
+           box-shadow:0 12px 26px -12px rgba(239,106,67,.9);}
+    .err{background:#FBE3D2; color:#B23B16; padding:11px 14px; border-radius:12px;
+         font:500 13px/1.4 'Hanken Grotesk',sans-serif; margin-bottom:6px; text-align:center;}
+  </style>
+</head>
+<body>
+  <form class="card" method="post" action="/admin/login">
+    <div class="brand">
+      <div class="mark"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V6"/><path d="m5 12 7-7 7 7"/></svg></div>
+      <span>Dropsite</span>
+    </div>
+    <h1>Welcome back</h1>
+    <p class="sub">Sign in to publish and manage sites</p>
+    {% if error %}<div class="err">{{ error }}</div>{% endif %}
+    <label for="username">Username</label>
+    <input id="username" name="username" autocomplete="username" autofocus required>
+    <label for="password">Password</label>
+    <input id="password" name="password" type="password" autocomplete="current-password" required>
+    <button type="submit">Sign in</button>
+  </form>
+</body>
+</html>
