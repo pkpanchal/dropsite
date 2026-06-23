@@ -2,8 +2,8 @@
 
 <img src="docs/banner.svg" alt="Dropsite" width="280"/>
 
-A simple, Netlify-like service for hosting prebuilt static sites —
-single-page HTML files, Claude-generated docs, or full multi-file zips.
+A simple service for hosting static sites —
+single-page HTML files, llm-generated docs, or multi-file zips.
 
 </div>
 
